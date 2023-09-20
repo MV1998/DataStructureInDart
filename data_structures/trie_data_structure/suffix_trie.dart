@@ -1,57 +1,32 @@
-class TrieNode {
-  late List<TrieNode?> _children;
-  bool? _isWordEnding;
+class SuffixTrieNode {
+  late List<SuffixTrieNode?> _children;
   String? _letter;
 
-  TrieNode(String letter) {
+  SuffixTrieNode(String letter) {
     this._children = List.generate(26, (index) => null);
-    this._isWordEnding = false;
     this._letter = letter;
   }
 }
 
-/// Trie Data Structure are providing these advantages
-/// 1. Space Optimization
-/// 2. Fast Searching
-
-
-/// Types of Tries
-///
-/// 1. Compressed Trie
-/// Compressed Trie combines the letter together if there is no further path exists from
-/// that letter.
-/// Complexity: 1. Grouping and Ungrouping decision is required at every insertion
-/// operation.
-///
-/// 2. Prefix Trie
-/// Prefix Trie used to implement dictionary like DS.
-/// We have implemented it.
-/// It searches exact pattern.
-///
-/// 3. Suffix Trie
-/// Suffix Trie used to implement pattern matching functionality for a word
-/// in the document.
-
-class Trie {
-  late TrieNode _root;
-  Trie() {
-    _root = TrieNode("\0");
+class SuffixTrie {
+  late SuffixTrieNode _root;
+  SuffixTrie() {
+    _root = SuffixTrieNode("\0");
   }
 
-  int _addWord(TrieNode root, String word) {
+  int _addWord(SuffixTrieNode root, String word) {
     /// Base condition
     if (word.isEmpty) {
-      root._isWordEnding = true;
       return 1;
     }
     /// Small Calculation
     int index = word[0].codeUnitAt(0) - ("a".codeUnitAt(0));
-    TrieNode? node;
+    SuffixTrieNode? node;
 
     if (root._children[index] != null) {
       node = root._children[index];
     } else {
-      node = TrieNode(word[0]);
+      node = SuffixTrieNode(word[0]);
       root._children[index] = node;
     }
     /// Recursive Call
@@ -62,11 +37,16 @@ class Trie {
     if (word.isEmpty) {
       return 0;
     }
-    return _addWord(_root, word.toLowerCase());
+    for (int i = 0; i < word.length; i++) {
+      if (!searchWord(word.substring(i))) {
+        _addWord(_root, word.substring(i));
+      }
+    }
+    return 1;
   }
 
-  bool _searchWord(TrieNode root, String word) {
-    if (word.isEmpty && root._isWordEnding!) {
+  bool _searchWord(SuffixTrieNode root, String word) {
+    if (word.isEmpty) {
       return true;
     }
     int index = word[0].codeUnitAt(0) - "a".codeUnitAt(0);
@@ -83,16 +63,15 @@ class Trie {
     return _searchWord(_root, word.toLowerCase());
   }
 
-  int _removeWord(TrieNode root, String word) {
+  int _removeWord(SuffixTrieNode root, String word) {
     if (word.isEmpty) {
-      root._isWordEnding = false;
       return 1;
     }
     int index = word[0].codeUnitAt(0) - "a".codeUnitAt(0);
     if (root._children[index] != null) {
       int result = _removeWord(root._children[index]!, word.substring(1));
       if (result == 1) {
-        for (TrieNode? node in root._children[index]!._children) {
+        for (SuffixTrieNode? node in root._children[index]!._children) {
           if (node != null) {
             return result;
           }
@@ -116,8 +95,3 @@ class Trie {
     return [];
   }
 }
-
-/*
-1. Word can be in small or capital letters. (Mo, mo)
-2.
- */
