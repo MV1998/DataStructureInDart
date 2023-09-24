@@ -76,6 +76,50 @@ class Trie {
     return false;
   }
 
+  void _helper(TrieNode root, List<String> list, String word) {
+
+    if(root._isWordEnding!) {
+      list.add(word);
+    }
+
+    bool shouldStop = true;
+    for (TrieNode? node in root._children) {
+      if (node != null) {
+        shouldStop = false;
+        break;
+      }
+    }
+    if (shouldStop) {
+      return;
+    }
+
+    for (TrieNode? node in root._children) {
+      if (node != null) {
+        _helper(node, list, word+node._letter!);
+      }
+    }
+  }
+
+  bool _autoComplete(TrieNode root, String word, String original) {
+    if (word.isEmpty) {
+      List<String> list = [];
+      _helper(root, list, original);
+      for (String s in list) {
+          print(s);
+      }
+      return true;
+    }
+    int index = word[0].codeUnitAt(0) - "a".codeUnitAt(0);
+    if (root._children[index] != null) {
+     return _autoComplete(root._children[index]!, word.substring(1), original);
+    }
+    return false;
+  }
+
+  void autoComplete(String word) {
+    _autoComplete(_root, word, word);
+  }
+
   bool searchWord(String word) {
     if (word.isEmpty) {
       return false;
@@ -110,14 +154,8 @@ class Trie {
     }
     return _removeWord(_root, word.toLowerCase());
   }
-
-  List<String> getAllWordStartWith(String word) {
-    /// TODO
-    return [];
-  }
 }
 
 /*
 1. Word can be in small or capital letters. (Mo, mo)
-2.
  */

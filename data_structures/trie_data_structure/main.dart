@@ -3,25 +3,57 @@ import 'suffix_trie.dart';
 import 'trie.dart';
 
 void main() {
-  print("Trie Data Structure");
-  // Trie trie = Trie();
- // String? word = stdin.readLineSync();
-  // trie.addWord(word!);
-  // print(trie.searchWord(word));
-  // print(trie.removeWord("Hello"));
-  // print(trie.searchWord(word));
-  // print(trie.searchWord("Hello"))
-  SuffixTrie suffixTrie = SuffixTrie();
+  Trie trie = Trie();
+  printMenu();
+  String? input = stdin.readLineSync();
+  while(input! != "6") {
+    switch(input) {
+      case "1":
+        print("Enter word to add or q for exit.");
+        String? word = stdin.readLineSync();
+        while(word! != "q") {
+          trie.addWord(word);
+          word = stdin.readLineSync();
+        }
+        break;
+      case "2":
+        print("Search word or q for exit.");
+        String? word = stdin.readLineSync();
+        while(word! != "q") {
+          trie.searchWord(word);
+          word = stdin.readLineSync();
+        }
+        break;
+      case "3":
+        print("Delete word or q for exit.");
+        String? word = stdin.readLineSync();
+        while(word! != "q") {
+          trie.removeWord(word);
+          word = stdin.readLineSync();
+        }
+        break;
+      case "4":
+        print("Auto complete or q for exit.");
+        String? word = stdin.readLineSync();
+        while(word! != "q") {
+          trie.autoComplete(word);
+          word = stdin.readLineSync();
+        }
+        break;
+      default:
+        print("This option is not available.");
+    }
+    printMenu();
+    input = stdin.readLineSync();
+  }
+}
 
-  // for (int i = 0; i < word!.length; i++) {
-  //   if (!suffixTrie.searchWord(word.substring(i))) {
-  //     print("Adding to suffix trie ${word.substring(i)}");
-  //     suffixTrie.addWord(word.substring(i));
-  //   }
-  // }
-  suffixTrie.addWord("abc");
-  suffixTrie.addWord("def");
-  suffixTrie.addWord("ghi");
-  suffixTrie.addWord("hg");
-  print(suffixTrie.searchWord("hi"));
+void printMenu() {
+  print("welcome to Dictionary");
+  print("1. Add word");
+  print("2. Search word");
+  print("3. Delete word");
+  print("4. Auto Complete word");
+  print("5. Size of dictionary");
+  print("6. Exit");
 }
